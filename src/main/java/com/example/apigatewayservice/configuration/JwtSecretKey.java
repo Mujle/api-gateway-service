@@ -1,4 +1,4 @@
-package com.example.apigatewayservice.beans;
+package com.example.apigatewayservice.configuration;
 
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;

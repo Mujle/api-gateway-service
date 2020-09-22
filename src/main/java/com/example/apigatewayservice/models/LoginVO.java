@@ -1,14 +1,14 @@
 package com.example.apigatewayservice.models;
 
-public class Login {
+public class LoginVO {
 
     private String username;
     private String password;
 
-    public Login() {
+    public LoginVO() {
     }
 
-    public Login(String username, String password) {
+    public LoginVO(String username, String password) {
         this.username = username;
         this.password = password;
     }

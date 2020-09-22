@@ -1,7 +1,7 @@
 package com.example.apigatewayservice.security;
 
 import com.example.apigatewayservice.security.jwt.CredentialsAuthenticationFilter;
-import com.example.apigatewayservice.beans.JwtConfig;
+import com.example.apigatewayservice.configuration.JwtConfig;
 import com.example.apigatewayservice.security.jwt.JwtTokenVerifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

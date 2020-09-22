@@ -1,4 +1,4 @@
-package com.example.apigatewayservice.beans;
+package com.example.apigatewayservice.configuration;
 
 import com.google.common.net.HttpHeaders;
 import org.springframework.boot.context.properties.ConfigurationProperties;

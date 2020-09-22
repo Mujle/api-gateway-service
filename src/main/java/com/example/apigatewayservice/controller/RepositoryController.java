@@ -1,6 +1,6 @@
-package com.example.apigatewayservice.controllers;
+package com.example.apigatewayservice.controller;
 
-import com.example.apigatewayservice.beans.JwtConfig;
+import com.example.apigatewayservice.configuration.JwtConfig;
 import com.example.apigatewayservice.models.*;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -34,35 +34,27 @@ public class RepositoryController {
 
     MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
 
-    public UserVO getUserByUsername(String username) {
-
-        HttpEntity<String> entity = new HttpEntity<>("body", headers);
-        ResponseEntity<UserVO> responseEntity = restTemplate.exchange("http://user-service/user/getUserByUsername?username=" + username, HttpMethod.GET, entity, UserVO.class);
-
-        return responseEntity.getBody();
-    }
-
     @PreAuthorize("hasAuthority('make:orders')")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, example = "Bearer access_token")
     @ApiOperation(notes = "Write the response from /api/login into Authorization header", value = "Make a new order")
-    @PostMapping(value = "/newOrder")
-    public void newOrder(@RequestBody OrderVO orderVO) {
+    @PostMapping(value = "/orders")
+    public void createOrder(@RequestBody OrderVO orderVO) {
 
         headers.add(HttpHeaders.CONTENT_TYPE, "application/json");
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
         HttpEntity<OrderVO> request = new HttpEntity<OrderVO>(orderVO, headers);
-        HttpEntity<String> response = restTemplate.exchange("http://repository-service/order/newOrder", HttpMethod.POST, request, String.class);
+        HttpEntity<String> response = restTemplate.exchange("http://repository-service/orders", HttpMethod.POST, request, String.class);
     }
 
     @PreAuthorize("hasAuthority('see:orders')")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, example = "Bearer access_token")
     @ApiOperation(notes = "Write the response from /api/login into Authorization header", value = "Get all orders by a specific user id")
-    @GetMapping(value = "/getOrdersByUserId")
+    @GetMapping(value = "/orders/users")
     public List<OrderVO> getOrders(@RequestParam("id") int id) {
 
         HttpEntity<String> entity = new HttpEntity<>("body", headers);
-        ResponseEntity<OrderVO[]> responseEntity = restTemplate.exchange("http://repository-service/order/getOrdersByUserId?id=" + id, HttpMethod.GET, entity, OrderVO[].class);
+        ResponseEntity<OrderVO[]> responseEntity = restTemplate.exchange("http://repository-service/orders/users/" + id, HttpMethod.GET, entity, OrderVO[].class);
 
         return Arrays.asList(responseEntity.getBody());
     }
@@ -70,11 +62,11 @@ public class RepositoryController {
     @PreAuthorize("hasAuthority('see:orders')")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, example = "Bearer access_token")
     @ApiOperation(notes = "Write the response from /api/login into Authorization header", value = "Get all orders")
-    @GetMapping(value = "/getAllOrders")
+    @GetMapping(value = "/orders")
     public List<OrderVO> getAllOrders() {
 
         HttpEntity<String> entity = new HttpEntity<>("body", headers);
-        ResponseEntity<OrderVO[]> responseEntity = restTemplate.exchange("http://repository-service/order/getAllOrders", HttpMethod.GET, entity, OrderVO[].class);
+        ResponseEntity<OrderVO[]> responseEntity = restTemplate.exchange("http://repository-service/orders", HttpMethod.GET, entity, OrderVO[].class);
 
         return Arrays.asList(responseEntity.getBody());
     }
@@ -83,11 +75,11 @@ public class RepositoryController {
     @PreAuthorize("hasAuthority('see:stock')")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, example = "Bearer access_token")
     @ApiOperation(notes = "Write the response from /api/login into Authorization header", value = "Get info of all products")
-    @GetMapping("/getAllProducts")
+    @GetMapping("/products")
     public List<ProductVO> getProducts() {
 
         HttpEntity<String> entity = new HttpEntity<>("body", headers);
-        ResponseEntity<ProductVO[]> responseEntity = restTemplate.exchange("http://repository-service/product/getAllProducts", HttpMethod.GET, entity, ProductVO[].class);
+        ResponseEntity<ProductVO[]> responseEntity = restTemplate.exchange("http://repository-service/products", HttpMethod.GET, entity, ProductVO[].class);
 
         return Arrays.asList(responseEntity.getBody());
     }
@@ -95,36 +87,36 @@ public class RepositoryController {
     @PreAuthorize("hasAuthority('add:stock')")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, example = "Bearer access_token")
     @ApiOperation(notes = "Write the response from /api/login into Authorization header", value = "Update products amount")
-    @PostMapping("/updateProduct")
-    void ProductUpdate(@RequestBody UpdateProductVO updateProductVO) {
+    @PutMapping("/products")
+    void productUpdate(@RequestBody UpdateProductVO updateProductVO) {
 
         headers.add(HttpHeaders.CONTENT_TYPE, "application/json");
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
         HttpEntity<UpdateProductVO> request = new HttpEntity<UpdateProductVO>(updateProductVO, headers);
-        HttpEntity<String> response = restTemplate.exchange("http://repository-service/product/updateProduct", HttpMethod.POST, request, String.class);
+        HttpEntity<String> response = restTemplate.exchange("http://repository-service/products", HttpMethod.PUT, request, String.class);
     }
 
     @PreAuthorize("hasAuthority('see:changes')")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, example = "Bearer access_token")
     @ApiOperation(notes = "Write the response from /api/login into Authorization header", value = "Get previous updates on products amount")
-    @GetMapping("/getUpdateHistory")
+    @GetMapping("/products/updates/history")
     List<UpdateProductVO> updatedProducts() {
 
         HttpEntity<String> entity = new HttpEntity<>("body", headers);
-        ResponseEntity<UpdateProductVO[]> responseEntity = restTemplate.exchange("http://repository-service/product/getUpdateHistory", HttpMethod.GET, entity, UpdateProductVO[].class);
+        ResponseEntity<UpdateProductVO[]> responseEntity = restTemplate.exchange("http://repository-service/products/updates/history", HttpMethod.GET, entity, UpdateProductVO[].class);
 
         return Arrays.asList(responseEntity.getBody());
     }
 
     @PostMapping("/login")
     @ApiOperation(notes = "Try username : mackastamacka, password : macka", value = "Get the Authorization header")
-    public String login(@RequestBody Login login) {
+    public String login(@RequestBody LoginVO loginVO) {
 
         headers.add(HttpHeaders.CONTENT_TYPE, "application/json");
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        HttpEntity<Login> request = new HttpEntity<Login>(login, headers);
+        HttpEntity<LoginVO> request = new HttpEntity<LoginVO>(loginVO, headers);
         HttpEntity<String> response = restTemplate.exchange("http://api-gateway-service/login", HttpMethod.POST, request, String.class);
         HttpHeaders headers = response.getHeaders();
 

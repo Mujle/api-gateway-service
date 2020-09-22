@@ -1,6 +1,6 @@
 package com.example.apigatewayservice.security.jwt;
 
-import com.example.apigatewayservice.beans.JwtConfig;
+import com.example.apigatewayservice.configuration.JwtConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;

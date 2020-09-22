@@ -1,4 +1,4 @@
-package com.example.apigatewayservice.beans;
+package com.example.apigatewayservice.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,8 +16,7 @@ public class SwaggerConfig {
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .paths(PathSelectors.ant("/api/*"))
-                .apis(RequestHandlerSelectors.basePackage("com.example.apigatewayservice.controllers"))
+                .apis(RequestHandlerSelectors.basePackage("com.example.apigatewayservice.controller"))
                 .build()
                 .apiInfo(apiDetails());
 

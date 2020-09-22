@@ -1,4 +1,4 @@
-package com.example.apigatewayservice.beans;
+package com.example.apigatewayservice.configuration;
 
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;

@@ -1,6 +1,6 @@
 package com.example.apigatewayservice.security.jwt;
 
-import com.example.apigatewayservice.beans.JwtConfig;
+import com.example.apigatewayservice.configuration.JwtConfig;
 import com.google.common.base.Strings;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
